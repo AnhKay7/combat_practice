@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 380839762}
   - component: {fileID: 380839763}
   - component: {fileID: 380839764}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RightWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 840486698}
   - component: {fileID: 840486699}
   - component: {fileID: 840486700}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -537,12 +537,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   velocity_y: 0
-  move_direction: 0
   move_speed: 8
   jump_height: 5
   jump_force: 0
   gravity_scale: 5
   max_fall_speed: -20
+  ground_layer:
+    serializedVersion: 2
+    m_Bits: 64
+  oneway_platform_layer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!61 &1687913272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -892,7 +897,7 @@ GameObject:
   - component: {fileID: 1991096804}
   - component: {fileID: 1991096805}
   - component: {fileID: 1991096806}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -8,7 +8,7 @@ public class GroundSensor : MonoBehaviour
     private Collider2D col;
     [Header("Setting")]
     [SerializeField] private LayerMask ground_layer;
-    [SerializeField] private float extra_height = 0.1f;
+    [SerializeField] private float extra_height = 0.02f;
 
     public bool is_ground { get; private set; }
     void Start()
@@ -18,10 +18,13 @@ public class GroundSensor : MonoBehaviour
 
     void Update()
     {
-        is_ground = CheckGrounded();
+        //is_ground = CheckGrounded();
     }
-
-    private bool CheckGrounded()
+    private void FixedUpdate()
+    {
+        //is_ground = CheckGrounded();
+    }
+    public bool CheckGrounded()
     {
         Vector2 box_center = col.bounds.center;
 
