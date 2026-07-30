@@ -3,28 +3,50 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    [SerializeField] private float x_input;
+    [Header("Object")]
+    [SerializeField] private float velocity_y = 0f;
+
+    [Header("Movement")]
+    [SerializeField] private float move_direction;
     [SerializeField] private float move_speed = 8f;
-    [SerializeField] private float jump_force = 8f;
-    private PlayerControls controls;
+    private bool is_facing_right = true;
+
+    [Header("Jump")]
+    [SerializeField] private float jump_height = 5f;
+    [SerializeField] private float jump_force;
+    [SerializeField] private float gravity_scale = 5f;
+    [SerializeField] private float max_fall_speed = -20f;
+    private GroundSensor ground_sensor;
+
+    [Header("Dash")]
+    private bool can_dash = true;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        ground_sensor = GetComponent<GroundSensor>();
     }
 
     void Update()
     {
-        x_input = 0f;
-        x_input = Input.GetAxisRaw("Horizontal");
+        velocity_y += Physics2D.gravity.y * gravity_scale * Time.deltaTime;
+        if (ground_sensor.is_ground == true)
+        {
+            if (velocity_y < 0)
+            {
+                velocity_y = 0f;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Z) && ground_sensor.is_ground)
+        {
+            jump_force = Mathf.Sqrt(jump_height * -2 * (Physics2D.gravity.y * gravity_scale));
+            velocity_y = jump_force;
+        }
+        velocity_y = Mathf.Max(velocity_y, max_fall_speed);
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, jump_force);
-
+        transform.Translate(new Vector3(0, velocity_y, 0) * Time.deltaTime);
     }
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(x_input * move_speed, rb.linearVelocity.y);
+       
     }
 }
