@@ -14,11 +14,16 @@ public class Player : MonoBehaviour
     private bool is_facing_right = true;
     [SerializeField] private float move_speed = 8f;
 
+    [Header("Gravity")]
+    [SerializeField] private float gravity_scale = 5f;
+    [SerializeField] private float fall_gravity_multiplier = 1.5f;
+
     [Header("Jump")]
     [SerializeField] private float jump_height = 5f;
     [SerializeField] private float jump_force;
-    [SerializeField] private float gravity_scale = 5f;
     [SerializeField] private float max_fall_speed = -20f;
+    [SerializeField] float jump_cut_multiplier = 0.5f;
+    private bool jump_held;
     private GroundSensor ground_sensor;
 
     [Header("Dash")]
@@ -58,19 +63,23 @@ public class Player : MonoBehaviour
         {
             velocity_y = Mathf.Sqrt(jump_height * -2 * (Physics2D.gravity.y * gravity_scale));
         }
+
+        if (Input.GetKeyUp(KeyCode.Z) && velocity_y > 0)
+        {
+            velocity_y *= jump_cut_multiplier;
+        }
+
     }
 
     private void CaculateVerticalVelocity()
     {
-        if (ground_sensor.CheckGrounded() && velocity_y < 0)
-        {
-            velocity_y = 0f;
-        }
-        else
-        {
-            velocity_y += Physics2D.gravity.y * gravity_scale * Time.fixedDeltaTime;
-            velocity_y = Mathf.Max(velocity_y, max_fall_speed);
-        }
+        float gravity = Physics2D.gravity.y * gravity_scale;
+
+        if (velocity_y < 0)
+            gravity *= fall_gravity_multiplier;
+
+        velocity_y += gravity * Time.fixedDeltaTime;
+        velocity_y = Mathf.Max(velocity_y, max_fall_speed);
     }
 
     private void ApplyMovement()
@@ -112,7 +121,7 @@ public class Player : MonoBehaviour
             }
             velocity_y = 0f;
             const float epsilon = 0.001f;
-            return direction * Mathf.Max(hit.distance - skin_width - epsilon, 0f);
+            return direction * (hit.distance - skin_width - epsilon);
         }
 
         return expected_delta_y;
@@ -135,7 +144,7 @@ public class Player : MonoBehaviour
         if (hit.collider != null)
         {
             const float epsilon = 0.001f;
-            return direction * Mathf.Max(hit.distance - skin_width - epsilon, 0f);
+            return direction * (hit.distance - skin_width - epsilon);
         }
 
         return expected_delta_x;

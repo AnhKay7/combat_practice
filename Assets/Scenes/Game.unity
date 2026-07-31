@@ -609,7 +609,7 @@ MonoBehaviour:
   ground_layer:
     serializedVersion: 2
     m_Bits: 64
-  extra_height: 0.1
+  extra_height: 0.02
 --- !u!1 &1687933614
 GameObject:
   m_ObjectHideFlags: 0
