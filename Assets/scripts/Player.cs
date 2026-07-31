@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
@@ -23,11 +24,23 @@ public class Player : MonoBehaviour
     [SerializeField] private float jump_force;
     [SerializeField] private float max_fall_speed = -20f;
     [SerializeField] float jump_cut_multiplier = 0.5f;
-    private bool jump_held;
+    [SerializeField] private float max_jump_buffer = 0.12f;
+    private float jump_buffer;
+    [SerializeField] private float max_coyote_time = 0.15f;
+    private float coyote_time_counter;
     private GroundSensor ground_sensor;
 
     [Header("Dash")]
-    private bool can_dash = true;
+    [SerializeField] private float dash_speed = 25f;
+    [SerializeField] private bool can_dash = true;
+    private bool is_dashing;
+    [SerializeField] private float dash_duration = 0.2f;
+    private float dash_time_left;
+    private float dash_direction;
+    [SerializeField] private float dash_cooldown = 0.4f;
+    private float dash_cooldown_counter = 0f;
+    [SerializeField] private float max_dash_buffer = 0.15f;
+    private float dash_buffer;
 
     [Header("Collision Prediction")]
     [SerializeField] private LayerMask ground_layer;
@@ -46,30 +59,120 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
-        CaculateVerticalVelocity();
+        if (is_dashing)
+        {
+            ApplyDash();
+            return;
+        }
 
+        CaculateVerticalVelocity();
         ApplyMovement();
     }
 
     private void GetPlayerInput()
     {
-        move_direction = 0f;
-        if (Input.GetKey(KeyCode.LeftArrow))
-            move_direction = -1f;
-        if (Input.GetKey(KeyCode.RightArrow))
-            move_direction = 1f;
+        HandleMovement();
+        HandleJump();
+        HandleDash();
+    }
 
-        if (Input.GetKeyDown(KeyCode.Z) && ground_sensor.CheckGrounded())
+    private void HandleJump()
+    {
+        bool grounded = ground_sensor.CheckGrounded();
+
+        if (Input.GetKeyDown(KeyCode.Z))
+            jump_buffer = max_jump_buffer;
+
+        if (jump_buffer > 0f)
+            jump_buffer -= Time.deltaTime;
+
+        if (grounded)
+            coyote_time_counter = max_coyote_time;
+        else if (coyote_time_counter > 0)
+            coyote_time_counter -= Time.deltaTime;
+
+        if (jump_buffer > 0f && coyote_time_counter > 0)
         {
             velocity_y = Mathf.Sqrt(jump_height * -2 * (Physics2D.gravity.y * gravity_scale));
+            jump_buffer = 0f;
+            coyote_time_counter = 0f;
+
+            if (Input.GetKey(KeyCode.Z) == false)
+            {
+                velocity_y *= jump_cut_multiplier;
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.Z) && velocity_y > 0)
         {
             velocity_y *= jump_cut_multiplier;
         }
-
     }
+
+    private void HandleDash()
+    {
+        bool grounded = ground_sensor.CheckGrounded();
+        if (grounded) // may touched the ground while in cooldown
+            can_dash = true;
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            dash_buffer = max_dash_buffer;
+        }
+
+        if (dash_cooldown_counter > 0)
+            dash_cooldown_counter -= Time.deltaTime;
+
+        if (dash_buffer > 0)
+        {
+            dash_buffer -= Time.deltaTime;
+        }
+
+        if (dash_buffer > 0 && can_dash && !is_dashing && dash_cooldown_counter <= 0)
+        {
+            is_dashing = true;
+            can_dash = false;
+            dash_time_left = dash_duration;
+
+            dash_direction = move_direction == 0f ? (is_facing_right == true ? 1f : -1f) : move_direction;
+        }
+    }
+    private void ApplyDash()
+    {
+
+        dash_time_left -= Time.fixedDeltaTime;
+
+        if (dash_time_left <= 0)
+        {
+            is_dashing = false;
+            velocity_y = 0f;
+            dash_cooldown_counter = dash_cooldown;
+            return;
+        }
+
+        float delta_x = dash_direction * dash_speed * Time.fixedDeltaTime;
+
+        delta_x = ResolveHorizontalCollision(delta_x);
+
+        float delta_y = ResolveVerticalCollision(0f);
+
+        transform.Translate(new Vector3(delta_x, delta_y, 0f));
+    }
+    private void HandleMovement()
+    {
+        move_direction = 0f;
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            move_direction = -1f;
+            is_facing_right = false;
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            move_direction = 1f;
+            is_facing_right = true;
+        }
+    }
+
 
     private void CaculateVerticalVelocity()
     {
