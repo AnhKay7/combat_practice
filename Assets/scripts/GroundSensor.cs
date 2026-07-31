@@ -7,7 +7,6 @@ public class GroundSensor : MonoBehaviour
 
     private Collider2D col;
     [Header("Setting")]
-    [SerializeField] private LayerMask ground_layer;
     [SerializeField] private float extra_height = 0.02f;
 
     public bool is_ground { get; private set; }
@@ -24,7 +23,7 @@ public class GroundSensor : MonoBehaviour
     {
         //is_ground = CheckGrounded();
     }
-    public bool CheckGrounded()
+    public RaycastHit2D CheckGrounded(LayerMask layer_to_check)
     {
         Vector2 box_center = col.bounds.center;
 
@@ -32,11 +31,10 @@ public class GroundSensor : MonoBehaviour
 
         float distance = col.bounds.extents.y + extra_height;
 
-        RaycastHit2D hit = Physics2D.BoxCast(box_center, box_size, 0, Vector2.down, distance, ground_layer);
+        RaycastHit2D hit = Physics2D.BoxCast(box_center, box_size, 0, Vector2.down, distance, layer_to_check);
 
-        return hit.collider != null;
+        return hit;
     }
-
     private void OnDrawGizmos()
     {
         if (col == null) col = GetComponent<Collider2D>();
