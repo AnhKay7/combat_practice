@@ -674,20 +674,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb97b94e19e0fb24ca92602f15cbfb8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  velocity_y: 0
-  move_speed: 8
+  max_move_speed: 8
+  ground_acceleration: 100
+  ground_deceleration: 120
+  air_deceleration: 50
+  turn_acceleration: 380
   gravity_scale: 5
   fall_gravity_multiplier: 1.5
   jump_height: 5
   max_fall_speed: -20
   jump_cut_multiplier: 0.5
-  max_jump_buffer: 0.12
-  max_coyote_time: 0.15
+  jump_buffer_time: 0.12
+  coyote_time: 0.15
   dash_speed: 25
-  can_dash: 1
   dash_duration: 0.2
   dash_cooldown: 0.4
-  max_dash_buffer: 0.15
+  dash_buffer_time: 0.15
+  wall_slide_speed: -5
+  wall_coyote_time: 0.08
+  wall_jump_force: 12
+  wall_jump_duration: 0.15
+  wall_jump_air_control: 0.05
   ground_layer:
     serializedVersion: 2
     m_Bits: 64
