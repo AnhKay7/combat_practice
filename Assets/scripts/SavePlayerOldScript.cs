@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class SavePlayerOldScript : MonoBehaviour
 {
     [Header("Object")]
     private float velocity_y = 0f;
