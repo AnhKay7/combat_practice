@@ -2,38 +2,47 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    public bool jump_pressed { get; private set; }
-    public bool jump_held { get; private set; }
-    public bool jump_released { get; private set; }
-    public bool dash_pressed { get; private set; }
-    public float move_direction { get; private set; }
-    public bool is_facing_right { get; private set; }
-    private void Awake()
-    {
-        is_facing_right = true;
-    }
-    private void GetPlayerInput()
-    {
-        jump_pressed = Input.GetKeyDown(KeyCode.Z);
-        jump_held = Input.GetKey(KeyCode.Z);
-        jump_released = Input.GetKeyUp(KeyCode.Z);
+    public bool JumpHeld { get; private set; }
+    public bool JumpReleased { get; private set; }
+    public float MoveDirection { get; private set; }
+    public bool IsFacingRight { get; private set; } = true;
 
-        dash_pressed = Input.GetKeyDown(KeyCode.C);
+    [Header("Input Buffer Settings")]
+    [SerializeField] private float jumpBufferTime = 0.15f;
+    [SerializeField] private float dashBufferTime = 0.15f;
 
-        move_direction = 0f;
+    private float jumpBufferCounter;
+    private float dashBufferCounter;
+
+    public bool JumpInput => jumpBufferCounter > 0f;
+    public bool DashInput => dashBufferCounter > 0f;
+    public void GetPlayerInput()
+    {
+        if (jumpBufferCounter > 0f)
+            jumpBufferCounter -= Time.deltaTime;
+        if (dashBufferCounter > 0f)
+            dashBufferCounter -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Z))
+            jumpBufferCounter = jumpBufferTime;
+        JumpHeld = Input.GetKey(KeyCode.Z);
+        JumpReleased = Input.GetKeyUp(KeyCode.Z);
+
+        if (Input.GetKeyDown(KeyCode.C))
+            dashBufferCounter = dashBufferTime;
+
+        MoveDirection = 0f;
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            move_direction = -1f;
-            is_facing_right = false;
+            MoveDirection = -1f;
+            IsFacingRight = false;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            move_direction = 1f;
-            is_facing_right = true;
+            MoveDirection = 1f;
+            IsFacingRight = true;
         }
     }
-    private void Update()
-    {
-        GetPlayerInput();
-    }
+    public void UseJumpInput() => jumpBufferCounter = 0f;
+    public void UseDashInput() => dashBufferCounter = 0f;
 }

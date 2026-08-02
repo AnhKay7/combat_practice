@@ -3,13 +3,13 @@ using UnityEngine;
 public abstract class PlayerState
 {
     protected Player player;
-    protected PlayerStateMachine state_machine;
+    protected PlayerStateMachine stateMachine;
     //protected string animation_name;
 
-    public PlayerState(Player player, PlayerStateMachine state_machine)
+    public PlayerState(Player _player, PlayerStateMachine _stateMachine)
     {
-        this.player = player;
-        this.state_machine = state_machine;
+        this.player = _player;
+        this.stateMachine = _stateMachine;
     }
 
     public virtual void EnterState()

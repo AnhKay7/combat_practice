@@ -10,6 +10,6 @@ public class PlayerIdleState : PlayerState
 
         base.EnterState();
 
-        player.velocity_x = 0f;
+        //player.velocity_x = 0f;
     }
 }

@@ -4,18 +4,18 @@ using UnityEngine.PlayerLoop;
 public class PlayerStateMachine
 {
 
-    public PlayerState current_state { get; private set; }
+    public PlayerState CurrentState { get; private set; }
 
-    public void Initialize(PlayerState starting_state)
+    public void Initialize(PlayerState startingState)
     {
-        current_state = starting_state;
-        current_state.EnterState();
+        CurrentState = startingState;
+        CurrentState.EnterState();
     }
 
-    public void ChangeState(PlayerState new_state)
+    public void ChangeState(PlayerState newState)
     {
-        current_state.ExitState();
-        current_state = new_state;
-        current_state.EnterState();
+        CurrentState.ExitState();
+        CurrentState = newState;
+        CurrentState.EnterState();
     }
 }
