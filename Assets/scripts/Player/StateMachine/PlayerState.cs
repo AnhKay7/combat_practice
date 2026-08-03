@@ -29,6 +29,17 @@ public abstract class PlayerState
 
     public virtual void PhysicUpdate()
     {
+        float velocityY = player.Movement.velocityY;
+        float gravity = Physics2D.gravity.y * player.GravityScale;
 
+        if (velocityY < 0)
+        {
+            gravity *= player.FallGravityMultiplier;
+        }
+
+        velocityY += gravity * Time.fixedDeltaTime;
+        velocityY = Mathf.Max(velocityY, player.MaxFallSpeed);
+
+        player.Movement.SetVelocityY(velocityY);
     }
 }

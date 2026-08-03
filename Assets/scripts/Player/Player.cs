@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float gravityScale = 5f;
     public float GravityScale => gravityScale;
 
+    [SerializeField] private float fallGravityMultiplier = 1.5f;
+    public float FallGravityMultiplier => fallGravityMultiplier;
+
     [SerializeField] private float jumpHeight = 5f;
     public float JumpHeight => jumpHeight;
 
@@ -105,7 +108,7 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Ground.CheckGround(Movement.velocity_y);
+        Ground.CheckGround(Movement.velocityY);
         Wall.CheckWall();
 
         StateMachine.CurrentState.PhysicUpdate();
