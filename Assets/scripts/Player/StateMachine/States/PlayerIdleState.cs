@@ -23,11 +23,11 @@ public class PlayerIdleState : PlayerState
             return;
         }
 
-        //if (player.Input.JumpInput)
-        //{
-        //    player.Input.UseJumpInput();
-        //    stateMachine.ChangeState(player.JumpState);
-        //}
+        if (player.Input.JumpInput)
+        {
+            stateMachine.ChangeState(player.JumpState);
+            return;
+        }
     }
     public override void PhysicUpdate()
     {

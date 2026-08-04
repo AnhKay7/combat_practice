@@ -1,11 +1,21 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public abstract class PlayerState
 {
     protected Player player;
     protected PlayerStateMachine stateMachine;
     //protected string animation_name;
-
+    protected virtual bool AllowDash => true;
+    protected bool CheckDashTransition()
+    {
+        if (AllowDash && player.Input.DashInput && player.DashController.CanDash(player.Ground.IsGrounded))
+        {
+            stateMachine.ChangeState(player.DashState);
+            return true;
+        }
+        return false;
+    }
     public PlayerState(Player _player, PlayerStateMachine _stateMachine)
     {
         this.player = _player;
@@ -14,7 +24,7 @@ public abstract class PlayerState
 
     public virtual void EnterState()
     {
-
+        Debug.Log("hello from " + stateMachine.CurrentState.ToString());
     }
 
     public virtual void ExitState()
@@ -24,7 +34,10 @@ public abstract class PlayerState
 
     public virtual void FrameUpdate()
     {
-
+        if (CheckDashTransition())
+        {
+            return;
+        }    
     }
 
     public virtual void PhysicUpdate()

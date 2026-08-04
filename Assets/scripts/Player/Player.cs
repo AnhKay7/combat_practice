@@ -8,8 +8,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxMoveSpeed = 8f;
     public float MaxMoveSpeed => maxMoveSpeed;
 
-    [SerializeField] private float groundAcceleration = 100f;
-    public float GroundAccel => groundAcceleration;
+    [SerializeField] private float baseAcceleration = 100f;
+    public float BaseAccel => baseAcceleration;
 
     [SerializeField] private float groundDeceleration = 120f;
     public float GroundDecel => groundDeceleration;
@@ -42,27 +42,15 @@ public class Player : MonoBehaviour
     public float CoyoteTime => coyoteTime;
     #endregion
 
-    #region Dash Config
-    [Header("Dash")]
-    [SerializeField] private float dashSpeed = 25f;
-    public float DashSpeed => dashSpeed;
-
-    [SerializeField] private float dashDuration = 0.2f;
-    public float DashDuration => dashDuration;
-
-    [SerializeField] private float dashCooldown = 0.4f;
-    public float DashCooldown => dashCooldown;
-    #endregion
-
     #region Wall Interact Config
     [Header("Wall Interact")]
-    [SerializeField] private float wallSlideSpeed = -5f;
+    [SerializeField] private float wallSlideSpeed = -7f;
     public float WallSlideSpeed => wallSlideSpeed;
 
     [SerializeField] private float wallCoyoteTime = 0.08f;
     public float WallCoyoteTime => wallCoyoteTime;
 
-    [SerializeField] private float wallJumpForce = 12f;
+    [SerializeField] private float wallJumpForce = 17f;
     public float WallJumpForce => wallJumpForce;
 
     [SerializeField] private float wallJumpDuration = 0.15f;
@@ -75,15 +63,27 @@ public class Player : MonoBehaviour
     #region Component
     public PlayerInput Input { get; private set; }
     public KinematicCharacterController Movement { get; private set; }
-
     public GroundSensor Ground { get; private set; }
     public WallSensor Wall { get; private set; }
+    public PlayerDashContoller DashController { get; private set; }
     #endregion
 
     #region StateMachine
     public PlayerStateMachine StateMachine { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
+    public PlayerFallState FallState { get; private set; }
+    public PlayerDashState DashState { get; private set; }
+    public PlayerJumpState JumpState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
+    #endregion
+
+    #region TimeStamp
+    public float LastTimeGrounded { get; private set; } = -100f;
+    public float LastTimeOnWall { get; private set; } = -100f;
+    public void ConsumeGroundedTime() => LastTimeGrounded = -100f;
+    public void ConsumeOnWallTime() => LastTimeOnWall = -100f;
     #endregion
 
     private void Awake()
@@ -92,10 +92,16 @@ public class Player : MonoBehaviour
         Movement = GetComponent<KinematicCharacterController>();
         Ground = GetComponent<GroundSensor>();
         Wall = GetComponent<WallSensor>();
+        DashController = GetComponent<PlayerDashContoller>();
 
         StateMachine = new PlayerStateMachine();
         IdleState = new PlayerIdleState(this, StateMachine);
         MoveState = new PlayerMoveState(this, StateMachine);
+        JumpState = new PlayerJumpState(this, StateMachine);
+        FallState = new PlayerFallState(this, StateMachine);
+        WallJumpState = new PlayerWallJumpState(this, StateMachine);
+        DashState = new PlayerDashState(this, StateMachine);
+        WallSlideState = new PlayerWallSlideState(this, StateMachine);
     }
     private void Start()
     {
@@ -111,8 +117,21 @@ public class Player : MonoBehaviour
         Ground.CheckGround(Movement.velocityY);
         Wall.CheckWall();
 
+        if (Ground.IsGrounded) LastTimeGrounded = Time.time;
+        if (Wall.IsTouchingWall) LastTimeOnWall = Time.time;
+        if (Ground.IsGrounded || Wall.IsTouchingWall)
+            DashController.ResetAirDashes();
+
+
         StateMachine.CurrentState.PhysicUpdate();
 
         Movement.PhysicsUpdate();
+    }
+    public void ConsumeAllJumpGraces() //coyote, wall coyote
+    {
+
+        ConsumeGroundedTime();
+        ConsumeOnWallTime();
+        Input.UseJumpInput();
     }
 }

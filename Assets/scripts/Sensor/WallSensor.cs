@@ -17,7 +17,7 @@ public class WallSensor : MonoBehaviour
     public void CheckWall()
     {
 
-        Vector2 boxSize = new Vector2(SKIN_WIDTH, targetCollider.bounds.extents.y * COLLISION_BOX_SCALE);
+        Vector2 boxSize = new Vector2(SKIN_WIDTH, targetCollider.bounds.size.y * COLLISION_BOX_SCALE);
 
         Vector2 rightCenter = (Vector2)targetCollider.bounds.center + Vector2.right * targetCollider.bounds.extents.x;
         Vector2 leftCenter = (Vector2)targetCollider.bounds.center + Vector2.left * targetCollider.bounds.extents.x;

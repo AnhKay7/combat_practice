@@ -19,6 +19,11 @@ public class PlayerMoveState : PlayerState
             stateMachine.ChangeState(player.IdleState);
             return;
         }
+        if (player.Input.JumpInput)
+        {
+            stateMachine.ChangeState(player.JumpState);
+            return;
+        }
     }
     public override void PhysicUpdate()
     {
@@ -28,7 +33,7 @@ public class PlayerMoveState : PlayerState
 
         bool isTurning = Mathf.Sign(player.Input.MoveDirection) != Mathf.Sign(velocityX)
                     && Mathf.Abs(velocityX) > EPSILON;
-        float curAcceleration = isTurning ? player.TurnAccel : player.GroundAccel;
+        float curAcceleration = isTurning ? player.TurnAccel : player.BaseAccel;
         velocityX += player.Input.MoveDirection * curAcceleration * Time.fixedDeltaTime;
         velocityX = Mathf.Clamp(velocityX, -player.MaxMoveSpeed, player.MaxMoveSpeed);
 

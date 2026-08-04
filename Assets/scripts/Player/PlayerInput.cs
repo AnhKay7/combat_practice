@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
@@ -11,38 +12,35 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private float jumpBufferTime = 0.15f;
     [SerializeField] private float dashBufferTime = 0.15f;
 
-    private float jumpBufferCounter;
-    private float dashBufferCounter;
+    private float lastTimePressedJump;
+    private float lastTimePressedDash;
 
-    public bool JumpInput => jumpBufferCounter > 0f;
-    public bool DashInput => dashBufferCounter > 0f;
+    public bool JumpInput => Time.time < lastTimePressedJump + jumpBufferTime;
+    public bool DashInput => Time.time < lastTimePressedDash + dashBufferTime;
     public void GetPlayerInput()
     {
-        if (jumpBufferCounter > 0f)
-            jumpBufferCounter -= Time.deltaTime;
-        if (dashBufferCounter > 0f)
-            dashBufferCounter -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Z))
-            jumpBufferCounter = jumpBufferTime;
+            lastTimePressedJump = Time.time;
         JumpHeld = Input.GetKey(KeyCode.Z);
         JumpReleased = Input.GetKeyUp(KeyCode.Z);
 
         if (Input.GetKeyDown(KeyCode.C))
-            dashBufferCounter = dashBufferTime;
+            lastTimePressedDash = Time.time;
 
-        MoveDirection = 0f;
-        if (Input.GetKey(KeyCode.LeftArrow))
+        MoveDirection = GetPlayerMoveDirection();
+        if (MoveDirection != 0f)
         {
-            MoveDirection = -1f;
-            IsFacingRight = false;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            MoveDirection = 1f;
-            IsFacingRight = true;
+            IsFacingRight = MoveDirection > 0f;
         }
     }
-    public void UseJumpInput() => jumpBufferCounter = 0f;
-    public void UseDashInput() => dashBufferCounter = 0f;
+    private float GetPlayerMoveDirection()
+    {
+        float rightValue = Input.GetKey(KeyCode.RightArrow) ? 1f : 0f;
+        float leftValue = Input.GetKey(KeyCode.LeftArrow) ? 1f : 0f;
+
+        return rightValue - leftValue;
+    }
+    public void UseJumpInput() => lastTimePressedJump = -100f;
+    public void UseDashInput() => lastTimePressedDash = -100f;
 }
