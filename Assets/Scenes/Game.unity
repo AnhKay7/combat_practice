@@ -639,6 +639,14 @@ GameObject:
   - component: {fileID: 1687913270}
   - component: {fileID: 1687913271}
   - component: {fileID: 1687913272}
+<<<<<<< Updated upstream
+=======
+  - component: {fileID: 1687913276}
+  - component: {fileID: 1687913275}
+  - component: {fileID: 1687913274}
+  - component: {fileID: 1687913273}
+  - component: {fileID: 1687913277}
+>>>>>>> Stashed changes
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -674,6 +682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb97b94e19e0fb24ca92602f15cbfb8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+<<<<<<< Updated upstream
   max_move_speed: 8
   ground_acceleration: 100
   ground_deceleration: 120
@@ -701,6 +710,24 @@ MonoBehaviour:
   oneway_platform_layer:
     serializedVersion: 2
     m_Bits: 128
+=======
+  maxMoveSpeed: 8
+  baseAcceleration: 100
+  groundDeceleration: 120
+  airDeceleration: 80
+  turnAcceleration: 380
+  gravityScale: 5
+  fallGravityMultiplier: 1.5
+  jumpHeight: 5
+  jumpCutMultiplier: 0.5
+  maxFallSpeed: -20
+  coyoteTime: 0.15
+  wallSlideSpeed: -7
+  wallCoyoteTime: 0.08
+  wallJumpForce: 17
+  wallJumpDuration: 0.15
+  wallJumpAirControl: 0.05
+>>>>>>> Stashed changes
 --- !u!61 &1687913272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -747,6 +774,92 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.6899152}
   m_EdgeRadius: 0
+<<<<<<< Updated upstream
+=======
+--- !u!114 &1687913273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687913269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c6d8973e6c5fb4b8d51294d3663ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallSensor
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  targetCollider: {fileID: 1687913272}
+--- !u!114 &1687913274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687913269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3caca34f6a93c940b10483599c06c84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundSensor
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  onewayPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  targetCollider: {fileID: 1687913272}
+--- !u!114 &1687913275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687913269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d523427ffd7d9a4db0c25e3feb958d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KinematicCharacterController
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  onewayPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &1687913276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687913269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9152778f4a2b34c48ab0c3c5fe70103d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+  jumpBufferTime: 0.15
+  dashBufferTime: 0.15
+--- !u!114 &1687913277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687913269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a9ba83d68ee6b240bc98e0ffb66b07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDashContoller
+  <DashSpeed>k__BackingField: 25
+  <DashDuration>k__BackingField: 0.2
+  <DashCooldown>k__BackingField: 0.5
+  <MaxAirDashes>k__BackingField: 1
+>>>>>>> Stashed changes
 --- !u!1 &1687933614
 GameObject:
   m_ObjectHideFlags: 0
