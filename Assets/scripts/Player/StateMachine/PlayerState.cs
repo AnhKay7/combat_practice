@@ -32,12 +32,13 @@ public abstract class PlayerState
 
     }
 
-    public virtual void FrameUpdate()
+    public virtual bool FrameUpdate()
     {
         if (CheckDashTransition())
         {
-            return;
-        }    
+            return true;
+        }
+        return false;
     }
 
     public virtual void PhysicUpdate()

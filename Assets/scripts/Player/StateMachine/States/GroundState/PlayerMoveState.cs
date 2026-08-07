@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerMoveState : PlayerState
+public class PlayerMoveState : PlayerGroundState
 {
     public PlayerMoveState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)
     {
@@ -10,20 +10,18 @@ public class PlayerMoveState : PlayerState
     {
         base.EnterState();
     }
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
 
         if (player.Input.MoveDirection == 0f)
         {
             stateMachine.ChangeState(player.IdleState);
-            return;
+            return true;
         }
-        if (player.Input.JumpInput)
-        {
-            stateMachine.ChangeState(player.JumpState);
-            return;
-        }
+
+        return false;
     }
     public override void PhysicUpdate()
     {

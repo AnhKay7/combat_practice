@@ -6,9 +6,10 @@ public class PlayerWallSlideState : PlayerState
     {
     }
 
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
 
         if (player.Ground.IsGrounded)
         {
@@ -20,12 +21,12 @@ public class PlayerWallSlideState : PlayerState
             {
                 stateMachine.ChangeState(player.IdleState);
             }
-            return;
+            return true;
         }
         if (player.Input.JumpInput)
         {
             stateMachine.ChangeState(player.WallJumpState);
-            return;
+            return true;
         }
 
         bool isPressingAwayFromWall = player.Input.MoveDirection != 0f && player.Input.MoveDirection != player.Wall.WallDirection;
@@ -33,8 +34,9 @@ public class PlayerWallSlideState : PlayerState
         if (!player.Wall.IsTouchingWall || isPressingAwayFromWall)
         {
             stateMachine.ChangeState(player.FallState);
-            return;
+            return true;
         }
+        return false;
     }
     public override void PhysicUpdate()
     {

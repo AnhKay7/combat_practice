@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundDeceleration = 120f;
     public float GroundDecel => groundDeceleration;
 
-    [SerializeField] private float airDeceleration = 50f;
+    [SerializeField] private float airDeceleration = 80f;
     public float AirDecel => airDeceleration;
 
     [SerializeField] private float turnAcceleration = 380f;
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
     public KinematicCharacterController Movement { get; private set; }
     public GroundSensor Ground { get; private set; }
     public WallSensor Wall { get; private set; }
-    public PlayerDashContoller DashController { get; private set; }
+    public PlayerDashController DashController { get; private set; }
     #endregion
 
     #region StateMachine
@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
         Movement = GetComponent<KinematicCharacterController>();
         Ground = GetComponent<GroundSensor>();
         Wall = GetComponent<WallSensor>();
-        DashController = GetComponent<PlayerDashContoller>();
+        DashController = GetComponent<PlayerDashController>();
 
         StateMachine = new PlayerStateMachine();
         IdleState = new PlayerIdleState(this, StateMachine);

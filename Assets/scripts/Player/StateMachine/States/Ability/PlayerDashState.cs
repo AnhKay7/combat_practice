@@ -30,9 +30,10 @@ public class PlayerDashState : PlayerAbilityState
         player.DashController.ConsumeDash(player.Ground.IsGrounded);
         abilityEndTime = Time.time + player.DashController.DashDuration;
     }
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
         if (Time.time >= abilityEndTime)
         {
             if (player.Ground.IsGrounded)
@@ -41,17 +42,18 @@ public class PlayerDashState : PlayerAbilityState
                     stateMachine.ChangeState(player.MoveState);
                 else
                     stateMachine.ChangeState(player.IdleState);
-                return;
+                return true;
             }
 
             if (player.Wall.IsTouchingWall)
             {
                 stateMachine.ChangeState(player.WallSlideState);
-                return;
+                return true;
             }
             stateMachine.ChangeState(player.FallState);
-            return;
+            return true;
         }
+        return false;
     }
     public override void PhysicUpdate()
     {

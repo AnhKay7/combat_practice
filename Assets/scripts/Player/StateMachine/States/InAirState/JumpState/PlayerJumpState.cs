@@ -31,9 +31,10 @@ public class PlayerJumpState : PlayerInAirState
         player.Movement.SetVelocityY(velocityY);
     }
 
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
         if (player.Input.JumpReleased && player.Movement.velocityY > 0)
         {
             CutJump();
@@ -41,7 +42,8 @@ public class PlayerJumpState : PlayerInAirState
         if (player.Movement.velocityY <= 0f)
         {
             stateMachine.ChangeState(player.FallState);
-            return;
+            return true;
         }
+        return false;
     }
 }

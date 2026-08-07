@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerIdleState : PlayerState
+public class PlayerIdleState : PlayerGroundState
 {
     public PlayerIdleState(Player player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -13,21 +13,18 @@ public class PlayerIdleState : PlayerState
         //player.Movement.SetVelocityX(0f);
 
     }
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
 
         if (player.Input.MoveDirection != 0f)
         {
             stateMachine.ChangeState(player.MoveState);
-            return;
+            return true;
         }
 
-        if (player.Input.JumpInput)
-        {
-            stateMachine.ChangeState(player.JumpState);
-            return;
-        }
+        return false;
     }
     public override void PhysicUpdate()
     {

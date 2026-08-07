@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerDashContoller : MonoBehaviour
+public class PlayerDashController : MonoBehaviour
 {
     [Header("Dash Stats")]
     [field: SerializeField] public float DashSpeed { get; private set; } = 25f;

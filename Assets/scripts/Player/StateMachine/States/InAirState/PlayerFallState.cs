@@ -5,21 +5,22 @@ public class PlayerFallState : PlayerInAirState
     public PlayerFallState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)
     {
     }
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
 
         if (player.Input.JumpInput)
         {
             if (Time.time - player.LastTimeGrounded < player.CoyoteTime)
             {
                 stateMachine.ChangeState(player.JumpState);
-                return;
+                return true;
             }
             if (Time.time - player.LastTimeOnWall < player.WallCoyoteTime)
             {
                 stateMachine.ChangeState(player.WallJumpState);
-                return;
+                return true;
             }
         }
         if (player.Ground.IsGrounded && player.Movement.velocityY <= 0f)
@@ -30,12 +31,14 @@ public class PlayerFallState : PlayerInAirState
             }
             else
                 stateMachine.ChangeState(player.IdleState);
-            return;
+            return true;
         }
         if (player.Wall.IsTouchingWall)
         {
             stateMachine.ChangeState(player.WallSlideState);
-            return;
+            return true;
         }
+
+        return false;
     }
 }

@@ -8,9 +8,11 @@ public abstract class PlayerInAirState : PlayerState
     {
     }
 
-    public override void FrameUpdate()
+    public override bool FrameUpdate()
     {
-        base.FrameUpdate();
+        if (base.FrameUpdate())
+            return true;
+        return false;
     }
     public override void PhysicUpdate()
     {
