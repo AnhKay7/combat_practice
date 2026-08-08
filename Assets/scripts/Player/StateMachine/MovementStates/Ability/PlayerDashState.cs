@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerDashState : PlayerAbilityState
 {
     protected override bool AllowDash => false;
-
+    public override bool CanAttack => false;
     private float dashDirection;
     public PlayerDashState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)
     {

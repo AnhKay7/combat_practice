@@ -66,6 +66,7 @@ public class Player : MonoBehaviour
     public GroundSensor Ground { get; private set; }
     public WallSensor Wall { get; private set; }
     public PlayerDashController DashController { get; private set; }
+    public PlayerCombatController CombatController { get; private set; }
     #endregion
 
     #region StateMachine
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
         Ground = GetComponent<GroundSensor>();
         Wall = GetComponent<WallSensor>();
         DashController = GetComponent<PlayerDashController>();
+        CombatController = GetComponent<PlayerCombatController>();
 
         StateMachine = new PlayerStateMachine();
         IdleState = new PlayerIdleState(this, StateMachine);
@@ -111,6 +113,8 @@ public class Player : MonoBehaviour
     {
         Input.GetPlayerInput();
         StateMachine.CurrentState.FrameUpdate();
+        CombatController.FrameUpdate(Input.IsFacingRight ? 1 : -1);
+        HandleActionRequests();
     }
     private void FixedUpdate()
     {
@@ -122,7 +126,6 @@ public class Player : MonoBehaviour
         if (Ground.IsGrounded || Wall.IsTouchingWall)
             DashController.ResetAirDashes();
 
-
         StateMachine.CurrentState.PhysicUpdate();
 
         Movement.PhysicsUpdate();
@@ -133,5 +136,12 @@ public class Player : MonoBehaviour
         ConsumeGroundedTime();
         ConsumeOnWallTime();
         Input.UseJumpInput();
+    }
+    private void HandleActionRequests()
+    {
+        if (Input.AttackInput)
+        {
+            CombatController.TryAttack(StateMachine.CurrentState.CanAttack, Input.IsFacingRight ? 1 : -1);
+        }
     }
 }

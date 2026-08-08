@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerAbilityState : PlayerState
+public class PlayerAbilityState : PlayerMovementState
 {
     protected float abilityEndTime = -100f;
     public PlayerAbilityState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)

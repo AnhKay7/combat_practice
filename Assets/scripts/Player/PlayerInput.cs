@@ -17,6 +17,7 @@ public class PlayerInput : MonoBehaviour
 
     public bool JumpInput => Time.time < lastTimePressedJump + jumpBufferTime;
     public bool DashInput => Time.time < lastTimePressedDash + dashBufferTime;
+    public bool AttackInput => Input.GetKeyDown(KeyCode.X);
     public void GetPlayerInput()
     {
 

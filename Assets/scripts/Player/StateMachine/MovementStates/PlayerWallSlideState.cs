@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerWallSlideState : PlayerState
+public class PlayerWallSlideState : PlayerMovementState
 {
     public PlayerWallSlideState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)
     {

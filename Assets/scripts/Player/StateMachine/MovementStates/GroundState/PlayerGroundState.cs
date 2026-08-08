@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerGroundState : PlayerState
+public class PlayerGroundState : PlayerMovementState
 {
     public PlayerGroundState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)
     {

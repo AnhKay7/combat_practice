@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class PlayerInAirState : PlayerState
+public abstract class PlayerInAirState : PlayerMovementState
 {
     protected float wallJumpInputUnlockTime = -100f;
     public PlayerInAirState(Player _player, PlayerStateMachine _stateMachine) : base(_player, _stateMachine)
